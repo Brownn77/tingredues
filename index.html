@@ -1,424 +1,234 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Team Dues Payment</title>
-    <style>
-      :root {
-        --pitch: #0f3d2e;
-        --pitch-deep: #0a2a20;
-        --chalk: #f6f3ea;
-        --gold: #c9a244;
-        --line: rgba(246, 243, 234, 0.14);
-        --ok: #4caf7d;
-        --err: #d96c5a;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        background: var(--pitch-deep);
-        background-image: repeating-linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.02) 0px,
-          rgba(255, 255, 255, 0.02) 1px,
-          transparent 1px,
-          transparent 46px
-        );
-        font-family: "Georgia", "Iowan Old Style", serif;
-        color: var(--chalk);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 32px 16px;
-      }
-
-      .card {
-        width: 100%;
-        max-width: 440px;
-        background: var(--pitch);
-        border: 1px solid var(--line);
-        border-radius: 4px;
-        padding: 40px 32px 32px;
-        position: relative;
-        box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
-      }
-
-      .card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--gold), transparent 70%);
-      }
-
-      .eyebrow {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 11px;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: var(--gold);
-        margin: 0 0 6px;
-      }
-
-      h1 {
-        font-size: 28px;
-        line-height: 1.15;
-        margin: 0 0 4px;
-        font-weight: 400;
-      }
-
-      .sub {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 14px;
-        color: rgba(246, 243, 234, 0.65);
-        margin: 0 0 28px;
-      }
-
-      .amount-block {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        padding: 18px 18px;
-        border: 1px solid var(--line);
-        border-radius: 3px;
-        margin-bottom: 28px;
-        background: rgba(255, 255, 255, 0.02);
-      }
-
-      .amount-label {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 12px;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: rgba(246, 243, 234, 0.55);
-      }
-
-      .amount-value {
-        font-size: 26px;
-        color: var(--gold);
-        font-variant-numeric: tabular-nums;
-      }
-
-      label {
-        display: block;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 12px;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: rgba(246, 243, 234, 0.6);
-        margin: 0 0 6px;
-      }
-
-      .field {
-        margin-bottom: 18px;
-      }
-
-      input {
-        width: 100%;
-        padding: 12px 14px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid var(--line);
-        border-radius: 3px;
-        color: var(--chalk);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 15px;
-        outline: none;
-        transition:
-          border-color 0.15s ease,
-          background 0.15s ease;
-      }
-
-      .stepper {
-        display: flex;
-        align-items: stretch;
-        border: 1px solid var(--line);
-        border-radius: 3px;
-        overflow: hidden;
-        background: rgba(255, 255, 255, 0.04);
-      }
-
-      .stepper input {
-        border: none;
-        background: transparent;
-        text-align: center;
-        -moz-appearance: textfield;
-        border-radius: 0;
-      }
-
-      .stepper input::-webkit-outer-spin-button,
-      .stepper input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-
-      .step-btn {
-        width: 44px;
-        flex: 0 0 44px;
-        background: transparent;
-        color: var(--chalk);
-        border: none;
-        font-size: 18px;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        cursor: pointer;
-        padding: 0;
-        margin: 0;
-        border-radius: 0;
-      }
-
-      .step-btn:hover {
-        background: rgba(255, 255, 255, 0.06);
-      }
-      .step-btn:first-child {
-        border-right: 1px solid var(--line);
-      }
-      .step-btn:last-child {
-        border-left: 1px solid var(--line);
-      }
-
-      input::placeholder {
-        color: rgba(246, 243, 234, 0.3);
-      }
-
-      input:focus {
-        border-color: var(--gold);
-        background: rgba(255, 255, 255, 0.06);
-      }
-
-      input:focus-visible {
-        outline: 2px solid var(--gold);
-        outline-offset: 1px;
-      }
-
-      button {
-        width: 100%;
-        padding: 15px;
-        margin-top: 8px;
-        background: var(--gold);
-        color: var(--pitch-deep);
-        border: none;
-        border-radius: 3px;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 15px;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-        cursor: pointer;
-        transition:
-          filter 0.15s ease,
-          transform 0.15s ease;
-      }
-
-      button:hover {
-        filter: brightness(1.08);
-      }
-      button:active {
-        transform: translateY(1px);
-      }
-      button:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-      button:focus-visible {
-        outline: 2px solid var(--chalk);
-        outline-offset: 2px;
-      }
-
-      .status {
-        margin-top: 16px;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 13.5px;
-        text-align: center;
-        min-height: 18px;
-      }
-
-      .status.ok {
-        color: var(--ok);
-      }
-      .status.err {
-        color: var(--err);
-      }
-
-      .foot {
-        margin-top: 24px;
-        text-align: center;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 11.5px;
-        color: rgba(246, 243, 234, 0.35);
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        button,
-        input {
-          transition: none;
-        }
-      }
-    </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tingre Dues Portal</title>
+    <meta
+      name="description"
+      content="Pay your Tingre monthly dues securely with Mobile Money."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="card">
-      <p class="eyebrow">Tingre Dues portal</p>
-      <h1>Pay your dues</h1>
-      <p class="sub">Settle your monthly dues securely via Paystack.</p>
+    <a class="skip" href="#dues">Skip to payment</a>
 
-      <div class="amount-block">
-        <span class="amount-label">Amount due</span>
-        <span class="amount-value" id="amountDisplay">GHS 20.00</span>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Tingre member portal home">
+        <span class="mono" aria-hidden="true">T</span>
+        <span><strong>Tingre</strong><small>Member portal</small></span>
+      </a>
+      <nav aria-label="Main">
+        <a href="#dues">Dues</a><a href="#other">Other payments</a
+        ><a href="#help">Help</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <svg
+          class="pitch"
+          viewBox="0 0 400 400"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <circle cx="200" cy="200" r="120" />
+          <circle cx="200" cy="200" r="4" />
+          <path
+            d="M0 200h400M40 90h320v220H40zM130 90v50h140V90M130 310v-50h140v50"
+          />
+        </svg>
+        <p class="eyebrow">Tingre member portal</p>
+        <h1>Stay up to date with your team dues.</h1>
+        <p class="lede">
+          Pay your monthly dues securely and keep your membership contributions
+          up to date.
+        </p>
+      </section>
+
+      <div class="stack">
+        <section class="card primary" id="dues" aria-labelledby="dues-title">
+          <div class="card-head">
+            <h2 id="dues-title">Monthly dues</h2>
+            <p class="rate"><span>GHS 20.50</span> per month</p>
+          </div>
+          <form id="dues-form" method="post">
+            <div class="stepper-row">
+              <label id="months-label" for="dues-months">Months to pay</label>
+              <div class="stepper" role="group" aria-labelledby="months-label">
+                <button
+                  type="button"
+                  id="months-dec"
+                  aria-label="Pay one month fewer"
+                >
+                  −
+                </button>
+                <input
+                  id="dues-months"
+                  name="months"
+                  type="text"
+                  inputmode="numeric"
+                  value="1"
+                  aria-describedby="dues-months-error"
+                  autocomplete="off"
+                />
+                <button
+                  type="button"
+                  id="months-inc"
+                  aria-label="Pay one month more"
+                >
+                  +
+                </button>
+              </div>
+              <p class="error" id="dues-months-error" role="alert"></p>
+            </div>
+
+            <div class="total">
+              <p class="calc" id="dues-calc" aria-live="polite">
+                1 month × GHS 20.50
+              </p>
+              <p class="total-label">Total due</p>
+              <p class="amount" id="dues-total">GHS 20.50</p>
+            </div>
+
+            <fieldset>
+              <legend>Member information</legend>
+              <div class="field">
+                <label for="dues-name">Full name</label>
+                <input
+                  id="dues-name"
+                  name="name"
+                  type="text"
+                  autocomplete="name"
+                  placeholder="Enter your full name"
+                  aria-describedby="dues-name-error"
+                  required
+                />
+                <p class="error" id="dues-name-error" role="alert"></p>
+              </div>
+              <!-- <div class="field"><label for="dues-email">Email <span class="hint">for your payment receipt</span></label>
+            <input id="dues-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" aria-describedby="dues-email-error" required>
+            <p class="error" id="dues-email-error" role="alert"></p></div> -->
+            </fieldset>
+
+            <button class="cta" id="dues-pay" type="submit">
+              <span class="spin" aria-hidden="true"></span
+              ><span class="cta-text">Pay GHS 20.50</span>
+            </button>
+            <p
+              class="status"
+              id="dues-status"
+              role="status"
+              aria-live="polite"
+            ></p>
+            <p class="secure">🔒 Secure payment powered by Paystack</p>
+          </form>
+        </section>
+
+        <section
+          class="card secondary"
+          id="other"
+          aria-labelledby="other-title"
+        >
+          <h2 id="other-title">Other payments</h2>
+          <p class="muted">
+            Need to make a payment outside your regular monthly dues?
+          </p>
+          <form id="other-form" method="post">
+            <div class="field">
+              <label for="other-name">Full name</label>
+              <input
+                id="other-name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                placeholder="Enter your full name"
+                aria-describedby="other-name-error"
+                required
+              />
+              <p class="error" id="other-name-error" role="alert"></p>
+            </div>
+            <!-- <div class="field"><label for="other-email">Email <span class="hint">for your payment receipt</span></label>
+          <input id="other-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" aria-describedby="other-email-error" required>
+          <p class="error" id="other-email-error" role="alert"></p></div> -->
+            <div class="field">
+              <label for="other-amount">Amount (GHS)</label>
+              <input
+                id="other-amount"
+                name="amount"
+                type="text"
+                inputmode="decimal"
+                placeholder="0.00"
+                aria-describedby="other-amount-error"
+                required
+              />
+              <p class="error" id="other-amount-error" role="alert"></p>
+            </div>
+            <button class="cta alt" id="other-pay" type="submit">
+              <span class="spin" aria-hidden="true"></span
+              ><span class="cta-text">Pay now</span>
+            </button>
+            <p
+              class="status"
+              id="other-status"
+              role="status"
+              aria-live="polite"
+            ></p>
+          </form>
+        </section>
       </div>
 
-      <form id="duesForm">
-        <div class="field">
-          <label for="name">Full name</label>
-          <input type="text" id="name" placeholder="e.g. Brown" required />
-        </div>
-        <div class="field">
-          <label for="months">Number of months</label>
-          <div class="stepper">
-            <button
-              type="button"
-              class="step-btn"
-              id="stepDown"
-              aria-label="Decrease months"
-            >
-              −
-            </button>
-            <input
-              type="number"
-              id="months"
-              value="1"
-              min="1"
-              step="1"
-              inputmode="numeric"
-            />
-            <button
-              type="button"
-              class="step-btn"
-              id="stepUp"
-              aria-label="Increase months"
-            >
-              +
-            </button>
-          </div>
-        </div>
-        <button type="submit" id="payBtn">Pay GHS 20.00</button>
-      </form>
+      <section class="how" id="help" aria-labelledby="how-title">
+        <h2 id="how-title">How it works</h2>
+        <ol>
+          <li>Enter your name.</li>
+          <li>Select the number of months.</li>
+          <li>Review your total.</li>
+          <li>Continue to secure Paystack checkout.</li>
+          <li>Complete payment using Mobile Money.</li>
+        </ol>
+      </section>
 
-      <p class="status" id="status"></p>
-      <p class="foot">Payments processed is secure.</p>
-    </div>
+      <ul class="trust">
+        <li>Secure payments</li>
+        <li>Mobile Money supported</li>
+        <li>Instant payment confirmation</li>
+      </ul>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <strong>Tingre Dues Portal</strong>
+        <p>Simple. Secure. Together.</p>
+      </div>
+      <nav aria-label="Footer">
+        <a href="mailto:support@example.com">Payment support</a
+        ><a href="/privacy">Privacy</a><a href="/terms">Terms</a>
+      </nav>
+      <p class="copy">© <span id="year"></span> Tingre</p>
+    </footer>
+
+    <dialog id="success-dialog" aria-labelledby="success-title">
+      <div class="check" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
+      </div>
+      <h2 id="success-title">Payment successful</h2>
+      <p class="muted">Your Tingre dues payment has been received.</p>
+      <dl id="success-details"></dl>
+      <button class="cta" id="success-close" type="button">
+        Make another payment
+      </button>
+    </dialog>
 
     <script src="https://js.paystack.co/v1/inline.js"></script>
-    <script>
-      // ⚠️ Replace with your own Paystack PUBLIC key (starts with pk_test_ or pk_live_)
-      const PAYSTACK_PUBLIC_KEY =
-        "pk_live_92a6fb3739637d334332b8e384529bcca58d2d35";
-      const AMOUNT_GHS = 20.5; // dues amount in cedis
-
-      const form = document.getElementById("duesForm");
-      const statusEl = document.getElementById("status");
-      const payBtn = document.getElementById("payBtn");
-      const monthsInput = document.getElementById("months");
-      const amountDisplay = document.getElementById("amountDisplay");
-      const stepUp = document.getElementById("stepUp");
-      const stepDown = document.getElementById("stepDown");
-
-      function currentMonths() {
-        const v = parseInt(monthsInput.value, 10);
-        return !v || v < 1 ? 1 : v;
-      }
-
-      function refreshAmount() {
-        const months = currentMonths();
-        const total = (AMOUNT_GHS * months).toFixed(2);
-        amountDisplay.textContent = "GHS " + total;
-        payBtn.textContent = "Pay GHS " + total;
-      }
-
-      stepUp.addEventListener("click", function () {
-        monthsInput.value = currentMonths() + 1;
-        refreshAmount();
-      });
-
-      stepDown.addEventListener("click", function () {
-        monthsInput.value = Math.max(1, currentMonths() - 1);
-        refreshAmount();
-      });
-
-      monthsInput.addEventListener("input", refreshAmount);
-      refreshAmount();
-
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        statusEl.textContent = "";
-        statusEl.className = "status";
-
-        const name = document.getElementById("name").value.trim();
-        const months = currentMonths();
-        const totalAmount = AMOUNT_GHS * months;
-
-        if (!name) {
-          statusEl.textContent = "Please enter your name.";
-          statusEl.className = "status err";
-          return;
-        }
-
-        if (PAYSTACK_PUBLIC_KEY.includes("REPLACE")) {
-          statusEl.textContent =
-            "Add your Paystack public key in the script before going live.";
-          statusEl.className = "status err";
-          return;
-        }
-
-        payBtn.disabled = true;
-        payBtn.textContent = "Opening secure checkout…";
-
-        // Paystack requires an email on every transaction even though we don't
-        // collect one from the payer. A placeholder is generated from their name
-        // so payments can still be reconciled by name in metadata/custom_fields.
-        const placeholderEmail = "tingre@gmail.com";
-
-        const handler = PaystackPop.setup({
-          key: PAYSTACK_PUBLIC_KEY,
-          email: placeholderEmail,
-          amount: totalAmount * 100, // Paystack expects the amount in pesewas/kobo
-          currency: "GHS",
-           channels: ['mobile_money'],
-          metadata: {
-            custom_fields: [
-              {
-                display_name: "Full Name",
-                variable_name: "full_name",
-                value: name,
-              },
-              {
-                display_name: "Months Paid",
-                variable_name: "months_paid",
-                value: months,
-              },
-            ],
-          },
-          callback: function (response) {
-            statusEl.textContent =
-              "Payment successful. Reference: " + response.reference;
-            statusEl.className = "status ok";
-            payBtn.textContent = "Paid ✓";
-          },
-          onClose: function () {
-            statusEl.textContent = "Payment window closed. No charge was made.";
-            statusEl.className = "status err";
-            payBtn.disabled = false;
-            refreshAmount();
-          },
-        });
-
-        handler.openIframe();
-      });
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
